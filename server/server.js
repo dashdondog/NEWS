@@ -50,6 +50,7 @@ if (process.env.NODE_ENV === "production") {
 
 // Error handler
 app.use((err, req, res, next) => {
+  console.error("Global Error Handler:", err);
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode).json({ message: err.message });
 });

@@ -6,6 +6,7 @@ const getCategories = async (req, res) => {
     const categories = await Category.find().sort({ name: 1 });
     res.json(categories);
   } catch (error) {
+    console.error("Error in categoryController:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -23,6 +24,7 @@ const createCategory = async (req, res) => {
     const category = await Category.create({ name, description });
     res.status(201).json(category);
   } catch (error) {
+    console.error("Error in categoryController:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -41,6 +43,7 @@ const updateCategory = async (req, res) => {
     }
     res.json(category);
   } catch (error) {
+    console.error("Error in categoryController:", error);
     res.status(500).json({ message: error.message });
   }
 };

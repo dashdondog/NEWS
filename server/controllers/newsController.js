@@ -30,6 +30,7 @@ const getNews = async (req, res) => {
       total,
     });
   } catch (error) {
+    console.error("Error in newsController:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -48,6 +49,7 @@ const getNewsById = async (req, res) => {
     }
     res.json(news);
   } catch (error) {
+    console.error("Error in newsController:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -61,6 +63,7 @@ const getTrending = async (req, res) => {
       .limit(5);
     res.json(news);
   } catch (error) {
+    console.error("Error in newsController:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -83,6 +86,7 @@ const createNews = async (req, res) => {
     const populated = await news.populate("category", "name");
     res.status(201).json(populated);
   } catch (error) {
+    console.error("Error in newsController:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -106,6 +110,7 @@ const updateNews = async (req, res) => {
     }
     res.json(news);
   } catch (error) {
+    console.error("Error in newsController:", error);
     res.status(500).json({ message: error.message });
   }
 };
