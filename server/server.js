@@ -15,7 +15,7 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-  "http://localhost:8500",
+  "http://localhost:3000",
   "https://news-two-jade-76.vercel.app", // Энд өөрийн Vercel хаягийг нэмээрэй
 ];
 
