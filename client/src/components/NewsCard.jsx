@@ -5,7 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL?.replace("/api", "") || "http://lo
 
 const NewsCard = ({ news, large = false }) => {
   const imageUrl = news.image
-    ? `${API_URL}${news.image}`
+    ? (news.image.startsWith("http") ? news.image : `${API_URL}${news.image}`)
     : "https://via.placeholder.com/600x400?text=No+Image";
 
   const date = new Date(news.createdAt).toLocaleDateString("mn-MN", {
