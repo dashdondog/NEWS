@@ -72,7 +72,7 @@ const getTrending = async (req, res) => {
 const createNews = async (req, res) => {
   try {
     const { title, content, category, author, featured } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : "";
+    const image = req.file ? req.file.path : "";
 
     const news = await News.create({
       title,
@@ -98,7 +98,7 @@ const updateNews = async (req, res) => {
     const updateData = { title, content, category, author, featured: featured === "true" };
 
     if (req.file) {
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = req.file.path;
     }
 
     const news = await News.findByIdAndUpdate(req.params.id, updateData, {
