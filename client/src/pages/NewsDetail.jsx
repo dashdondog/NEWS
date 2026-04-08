@@ -50,7 +50,7 @@ const NewsDetail = () => {
   });
 
   const imageUrl = news.image
-    ? `${API_URL}${news.image}`
+    ? (news.image.startsWith("http") ? news.image : `${API_URL}${news.image}`)
     : null;
 
   return (
