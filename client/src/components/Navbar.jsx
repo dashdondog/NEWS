@@ -34,7 +34,7 @@ const Navbar = ({ user, setUser, categories }) => {
                 {cat.name}
               </Link>
             ))}
-            {user ? (
+            {user && (
               <>
                 {user.role === "admin" && (
                   <Link
@@ -51,13 +51,6 @@ const Navbar = ({ user, setUser, categories }) => {
                   Гарах
                 </button>
               </>
-            ) : (
-              <Link
-                to="/login"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-              >
-                Нэвтрэх
-              </Link>
             )}
           </div>
 
@@ -92,7 +85,7 @@ const Navbar = ({ user, setUser, categories }) => {
                 {cat.name}
               </Link>
             ))}
-            {user ? (
+            {user && (
               <>
                 {user.role === "admin" && (
                   <Link to="/admin" className="block py-2 text-blue-600 font-medium" onClick={() => setMenuOpen(false)}>
@@ -103,10 +96,6 @@ const Navbar = ({ user, setUser, categories }) => {
                   Гарах
                 </button>
               </>
-            ) : (
-              <Link to="/login" className="block py-2 text-blue-600 font-medium" onClick={() => setMenuOpen(false)}>
-                Нэвтрэх
-              </Link>
             )}
           </div>
         )}
