@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getNewsById } from "../services/api";
+import { getNewsById, getComments, addComment } from "../services/api";
 
 const API_URL = process.env.REACT_APP_API_URL?.replace("/api", "") || "http://localhost:5000";
 
@@ -8,6 +8,10 @@ const NewsDetail = () => {
   const { id } = useParams();
   const [news, setNews] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState([]);
+  const [form, setForm] = useState({ name: "", content: "" });
+  const [submitting, setSubmitting] = useState(false);
+  const [commentError, setCommentError] = useState("");
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -21,6 +25,45 @@ const NewsDetail = () => {
     };
     fetchNews();
   }, [id]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const { data } = await getComments(id);
+        setComments(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchComments();
+  }, [id]);
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    setCommentError("");
+    if (!form.name.trim() || !form.content.trim()) {
+      setCommentError("Нэр болон сэтгэгдэл бөглөнө үү");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const { data } = await addComment(id, form);
+      setComments([data, ...comments]);
+      setForm({ name: "", content: "" });
+    } catch (err) {
+      setCommentError(err.response?.data?.message || "Алдаа гарлаа");
+    }
+    setSubmitting(false);
+  };
+
+  const formatCommentDate = (d) =>
+    new Date(d).toLocaleDateString("mn-MN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   if (loading) {
     return (
@@ -115,6 +158,62 @@ const NewsDetail = () => {
         className="prose prose-lg max-w-none text-gray-800 leading-relaxed"
         dangerouslySetInnerHTML={{ __html: news.content }}
       />
+
+      {/* Comments */}
+      <section className="mt-12 pt-8 border-t">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Сэтгэгдэл ({comments.length})
+        </h2>
+
+        <form onSubmit={handleSubmitComment} className="bg-gray-50 p-5 rounded-xl mb-8 space-y-3">
+          {commentError && (
+            <div className="bg-red-50 text-red-700 px-4 py-2 rounded-lg text-sm">
+              {commentError}
+            </div>
+          )}
+          <input
+            type="text"
+            placeholder="Таны нэр"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            maxLength={50}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <textarea
+            placeholder="Сэтгэгдлээ бичнэ үү..."
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            maxLength={1000}
+            rows={3}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            disabled={submitting}
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-medium"
+          >
+            {submitting ? "Илгээж байна..." : "Илгээх"}
+          </button>
+        </form>
+
+        {comments.length === 0 ? (
+          <p className="text-gray-500 text-center py-4">
+            Эхний сэтгэгдлийг үлдээгээрэй
+          </p>
+        ) : (
+          <ul className="space-y-4">
+            {comments.map((c) => (
+              <li key={c._id} className="bg-white border border-gray-200 rounded-xl p-4">
+                <div className="flex justify-between items-baseline mb-1">
+                  <span className="font-semibold text-gray-900">{c.name}</span>
+                  <span className="text-xs text-gray-400">{formatCommentDate(c.createdAt)}</span>
+                </div>
+                <p className="text-gray-700 whitespace-pre-wrap">{c.content}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       {/* Back */}
       <div className="mt-12 pt-6 border-t">

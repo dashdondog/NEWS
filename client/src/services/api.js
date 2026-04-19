@@ -38,4 +38,9 @@ export const createCategory = (data) => API.post("/category", data);
 export const updateCategory = (id, data) => API.put(`/category/${id}`, data);
 export const deleteCategory = (id) => API.delete(`/category/${id}`);
 
+// ---- Comments ----
+export const getComments = (newsId) => API.get(`/comments/${newsId}`);
+export const addComment = (newsId, data) => API.post(`/comments/${newsId}`, data);
+export const deleteComment = (id) => API.delete(`/comments/${id}`);
+
 export default API;

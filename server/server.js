@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const newsRoutes = require("./routes/newsRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 
 // Connect to MongoDB
 connectDB();
@@ -40,6 +41,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/comments", commentRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
