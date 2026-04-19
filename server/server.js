@@ -12,6 +12,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 connectDB();
 
 const app = express();
+app.set("trust proxy", true);
 
 // Middleware
 const allowedOrigins = [

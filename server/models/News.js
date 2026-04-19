@@ -12,6 +12,7 @@ const newsSchema = new mongoose.Schema(
     },
     author: { type: String, required: true },
     views: { type: Number, default: 0 },
+    viewedBy: { type: [String], default: [] },
     featured: { type: Boolean, default: false },
   },
   { timestamps: true }

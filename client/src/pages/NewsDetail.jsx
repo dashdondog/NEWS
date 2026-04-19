@@ -74,13 +74,16 @@ const NewsDetail = () => {
       </h1>
 
       {/* Meta */}
-      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
+      <div className="flex flex-col space-y-2 text-sm text-gray-500 mb-6">
         <span className="font-medium text-gray-700">{news.author}</span>
-        <span>{date}</span>
-        <span>{news.views} үзсэн</span>
+        <span>Огноо: {date}</span>
+        <span>Үзэлт: {news.views}</span>
         {news.category && (
-          <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
-            {news.category.name}
+          <span>
+            Төрөл:{" "}
+            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+              {news.category.name}
+            </span>
           </span>
         )}
       </div>

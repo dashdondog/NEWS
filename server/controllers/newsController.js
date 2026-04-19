@@ -38,16 +38,29 @@ const getNews = async (req, res) => {
 // GET /api/news/:id
 const getNewsById = async (req, res) => {
   try {
-    const news = await News.findByIdAndUpdate(
-      req.params.id,
-      { $inc: { views: 1 } },
+    const isAdmin = req.user && req.user.role === "admin";
+
+    if (isAdmin) {
+      const news = await News.findById(req.params.id).populate("category", "name");
+      if (!news) return res.status(404).json({ message: "News not found" });
+      return res.json(news);
+    }
+
+    const identifier = req.user ? `user:${req.user._id}` : `ip:${req.ip}`;
+
+    const news = await News.findOneAndUpdate(
+      { _id: req.params.id, viewedBy: { $ne: identifier } },
+      { $inc: { views: 1 }, $push: { viewedBy: identifier } },
       { new: true }
     ).populate("category", "name");
 
-    if (!news) {
-      return res.status(404).json({ message: "News not found" });
+    if (news) {
+      return res.json(news);
     }
-    res.json(news);
+
+    const existing = await News.findById(req.params.id).populate("category", "name");
+    if (!existing) return res.status(404).json({ message: "News not found" });
+    return res.json(existing);
   } catch (error) {
     console.error("Error in newsController:", error);
     res.status(500).json({ message: error.message });
