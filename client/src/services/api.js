@@ -5,12 +5,24 @@ const API = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
 });
 
-// Attach token to every request
+const getDeviceId = () => {
+  let id = localStorage.getItem("deviceId");
+  if (!id) {
+    id =
+      (crypto.randomUUID && crypto.randomUUID()) ||
+      `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem("deviceId", id);
+  }
+  return id;
+};
+
+// Attach token and device id to every request
 API.interceptors.request.use((config) => {
   const user = JSON.parse(localStorage.getItem("user"));
   if (user?.token) {
     config.headers.Authorization = `Bearer ${user.token}`;
   }
+  config.headers["X-Device-Id"] = getDeviceId();
   return config;
 });
 

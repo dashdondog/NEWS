@@ -46,7 +46,12 @@ const getNewsById = async (req, res) => {
       return res.json(news);
     }
 
-    const identifier = req.user ? `user:${req.user._id}` : `ip:${req.ip}`;
+    const deviceId = req.headers["x-device-id"];
+    const identifier = req.user
+      ? `user:${req.user._id}`
+      : deviceId
+      ? `device:${deviceId}`
+      : `ip:${req.ip}`;
 
     const news = await News.findOneAndUpdate(
       { _id: req.params.id, viewedBy: { $ne: identifier } },
